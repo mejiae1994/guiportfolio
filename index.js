@@ -9,6 +9,7 @@
 // maybe some animation cartoon pixel walking
 // make it cozy
 // display shortcut for opening terminal to leave a message, hint shortcut
+// on terminal hover, focus input
 
 /* 
   background snow falling, snow that falls piles on the bottom while user is in website
@@ -192,10 +193,8 @@ function getModalWindowElement(eleIndex) {
     e.preventDefault();
     e.stopPropagation();
     if (e.target.className == "window-button") {
-      console.log("close window");
       divEl.style.display = "none";
       openedTabs = openedTabs.filter((number) => number != index);
-      console.log(openedTabs);
     }
   });
   console.log(openedTabs);
@@ -208,7 +207,7 @@ specialize in web development and web applications. Leave a comment below :)`;
 
 const cliRow = `<div class="cli-row">
 <span>emejia@DESKTOP-HI:<span class="blue-span">~</span><span class="w-span">$</span> </span>
-<input type="text" name="cmd"></input>
+<input class="cli-input" type="text" name="cmd"></input>
 </div>`;
 
 function getTerminalPanel() {
@@ -225,8 +224,6 @@ function getTerminalPanel() {
     e.preventDefault();
     e.stopPropagation();
     if (e.target.className == "header-button") {
-      console.log("clicked on close buttton");
-      console.log(terminal.style.display);
       if (terminal.style.display === "block") {
         terminal.style.display = "none";
       }
@@ -247,11 +244,35 @@ function getTerminalPanel() {
   terminalDesc.appendChild(terminalP);
   terminal.appendChild(terminalDesc);
   terminal.appendChild(terminalCLI);
+
+  terminal.addEventListener("mousemove", function () {
+    let cliInput = document.querySelector(".cli-input");
+    console.log("mouse moving");
+  });
+
   document.body.appendChild(terminal);
 }
 
 getTerminalPanel();
 
+//need to add flashing | character to cli row to indicate awaiting input
+let cliInput = document.querySelector(".cli-input");
+cliInput.addEventListener("keydown", function (e) {
+  if (e.code === "Enter") {
+    e.preventDefault();
+    let inputValue = e.target.value;
+    e.target.value = "";
+    let terminalCLI = document.querySelector(".terminal-cli");
+    let cliDiv = document.createElement("div");
+    cliDiv.className = "cli-row";
+    let rowP = document.createElement("p");
+    rowP.textContent = inputValue;
+    cliDiv.appendChild(rowP);
+    terminalCLI.append(cliDiv);
+  }
+});
+
+function appendCliRow() {}
 function createSnowflake() {
   var snowflakes = document.querySelectorAll(".snowflake");
 
@@ -261,24 +282,25 @@ function createSnowflake() {
   var snowflake = document.createElement("div");
   snowflake.className = "snowflake";
   snowflake.style.left = random(0, window.innerWidth) + "px";
-  snowflake.style.width = snowflake.style.height = random(5, 15) + "px";
+  snowflake.style.width = snowflake.style.height = random(5, 13) + "px";
   document.body.appendChild(snowflake);
 }
 
 function removeOutOfWindowSnowflakes() {
   var snowflakes = document.querySelectorAll(".snowflake");
-  console.log(snowflakes.length);
   snowflakes.forEach(function (snowflake) {
     var rect = snowflake.getBoundingClientRect();
 
     if (rect.bottom > window.innerHeight && snowflakes?.length > 148) {
       snowflake.remove();
+      console.log("removed snowflake");
     }
   });
 }
 
-function moveSnow() {
+function moveSnow(currentTime) {
   var snowflakes = document.querySelectorAll(".snowflake");
+
   setTimeout(() => {
     snowflakes.forEach(function (snowflake) {
       if (snowflake.style.top < 1) {
@@ -302,6 +324,4 @@ function random(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-window.addEventListener("DOMContentLoaded", function () {
-  window.requestAnimationFrame(moveSnow());
-});
+window.requestAnimationFrame(moveSnow);
