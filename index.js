@@ -1,4 +1,23 @@
-var windowGrid = document.querySelector(".window-grid");
+// TODO:
+
+// based on weather data
+// terminal right side of the screen to accept input
+// drag and drop
+// implement other filetypes
+// draggable positioning widgets
+// banner for random stuff
+// maybe some animation cartoon pixel walking
+// make it cozy
+// display shortcut for opening terminal to leave a message, hint shortcut
+
+/* 
+  background snow falling, snow that falls piles on the bottom while user is in website
+  I will probably need different size flakes, maybe 6 different flakes
+  falling at different speed
+
+*/
+
+let windowGrid = document.querySelector(".window-grid");
 
 let layout = [
   [1, 1, 0],
@@ -8,7 +27,7 @@ let layout = [
   [1, 1, 0],
 ];
 
-var openedTabs = [];
+let openedTabs = [];
 
 const iconType = {
   Link: "Link",
@@ -23,18 +42,21 @@ const filesArray = [
     title: "Resume",
     content: "",
     url: "https://docs.google.com/document/d/1Rh3avqDgyAyEnCqN48QGoRxv2S4qwu4cy5SrNwri9h4/edit",
+    src: "images/resume.png",
   },
   {
     fileType: iconType.Link,
     title: "Github",
     content: "",
     url: "https://github.com/mejiae1994",
+    src: "images/github.png",
   },
   {
     fileType: iconType.Link,
     title: "Linkedin",
     content: "",
     url: "https://www.linkedin.com/in/mejiae1994/",
+    src: "images/linkedin.png",
   },
   {
     fileType: iconType.Project,
@@ -42,6 +64,7 @@ const filesArray = [
     content:
       "Mapeeter is an interactive map application that allows users to mark and share images/comments of places they have traveled to. Mapeeter is a solo project that uses React with Material-UI, TypeScript, Node.js with Express, and Postgresql (Supabase). The aim is to create a push pin travel map with social aspects/features.",
     url: "https://github.com/mejiae1994/mapeeter",
+    src: "images/folder.png",
   },
   {
     fileType: iconType.Project,
@@ -49,6 +72,7 @@ const filesArray = [
     content:
       "Timer Log is a personnal chrome extension that I use to monitor/log the amount of time I spent on various self-improvement actitivies such as learning, working on projects, etc. It integrates with the Notion API to update a databse.",
     url: "https://github.com/mejiae1994/timer-log-extension",
+    src: "images/folder.png",
   },
   {
     fileType: iconType.Project,
@@ -56,85 +80,112 @@ const filesArray = [
     content:
       "Eel is a multi-level video game in which the player assumes the role of an eel. The objective is to protect its offspring while evading deadly predators. The game is developed using plain JavaScript, HTML, and CSS, with canvas and physics algorithms utilized for rendering, animation, and movement.",
     url: "https://github.com/mejiae1994/Eel",
+    src: "images/folder.png",
   },
 ];
-
-const folder =
-  '<a class="folder" href="https://github.com/mejiae1994/Eel"><img class="folder-icon" src="./folder.png" />Folder</a>';
-
-function extractHtmlFromRawString(rawHtml) {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(rawHtml, "text/html");
-  const folderAnchor = doc.querySelector("a");
-  return folderAnchor;
-}
 
 let fileIndex = 0;
 for (let i = 0; i < layout.length; i++) {
   for (let j = 0; j < layout[i].length; j++) {
-    var divEl = document.createElement("div");
-    divEl.className = "window-icon";
-    divEl.setAttribute("index", i * 3 + j);
+    var gridChild = document.createElement("div");
+    gridChild.className = "grid-child";
 
-    if (layout[i][j]) {
-      if (fileIndex < filesArray.length) {
-        anchorTag = extractHtmlFromRawString(folder);
-        anchorTag.addEventListener("click", function (e) {
-          openWindow(e);
-        });
+    if (layout[i][j] && fileIndex < filesArray.length) {
+      gridChild.setAttribute("index", fileIndex);
+      let currentFile = filesArray[fileIndex];
+      let localFileTemplate = getFileTemplate(currentFile);
 
-        divEl.appendChild(anchorTag);
-        fileIndex++;
-      }
+      gridChild.appendChild(localFileTemplate);
+      fileIndex++;
     }
-    windowGrid.appendChild(divEl);
+    windowGrid.appendChild(gridChild);
   }
 }
 
-//I want to click on the icon and either trigger an anchor tag to open or the content
-// for (let i = 0; i < 40; i++) {
-//   var divEl = document.createElement("div");
-//   divEl.className = "window-icon";
-//   divEl.setAttribute("index", i);
-//   anchorTag = extractHtmlFromRawString(folder);
-//   //   anchorTag.addEventListener("click", function (e) {
-//   //     openWindow(e);
-//   //   });
-
-//   divEl.appendChild(anchorTag);
-
-//   windowGrid.appendChild(divEl);
-// }
+//this function will create the various elements based on filetype
+function getFileTemplate(file) {
+  switch (file.fileType) {
+    case iconType.Link: {
+      let aTag = document.createElement("a");
+      aTag.className = "folder";
+      aTag.href = file.url;
+      aTag.target = "_blank";
+      let imgTag = document.createElement("img");
+      imgTag.className = "folder-icon";
+      imgTag.src = file.src;
+      aTag.appendChild(imgTag);
+      aTag.innerHTML += file.title;
+      return aTag;
+    }
+    case iconType.Project: {
+      let divTag = document.createElement("div");
+      divTag.className = "folder";
+      let imgTag = document.createElement("img");
+      imgTag.className = "folder-icon";
+      imgTag.src = file.src;
+      divTag.appendChild(imgTag);
+      divTag.innerHTML += file.title;
+      divTag.addEventListener("click", function (e) {
+        openWindow(e);
+      });
+      return divTag;
+    }
+    case iconType.Folder: {
+      break;
+    }
+    case iconType.Blog: {
+      break;
+    }
+  }
+}
 
 function openWindow(e) {
   e.preventDefault();
   e.stopPropagation();
-  console.log(e);
+
   let currentEl = e.target;
-  //   let eleIndex = currentEl.getAttribute("index");
-  if (currentEl.className === "folder") {
-    console.log("clicked the folder");
-    // currentEl.appendChild(getModalWindowElement(eleIndex));
+  let eleIndex = currentEl.parentElement.parentElement.getAttribute("index");
+  let elementExist = openedTabs.find((value) => value == eleIndex);
+
+  if (currentEl.className === "folder-icon" && !elementExist) {
+    currentEl.parentElement.parentElement.appendChild(
+      getModalWindowElement(eleIndex)
+    );
   }
 }
 //maybe construct the modal based on the type of icon/file we click
 //I need to add the original icon properties to know how to populate the modal
 function getModalWindowElement(eleIndex) {
   openedTabs.push(eleIndex);
+  let offset = openedTabs.length * 100;
+  let elementContent = filesArray[eleIndex];
 
   let divEl = document.createElement("div");
   let divChild = document.createElement("div");
   let divButton = document.createElement("button");
+  let divP = document.createElement("p");
 
   divEl.className = "window-modal";
   divChild.className = "window-titlebar";
   divButton.className = "window-button";
+
+  divEl.style.zIndex = offset;
+  divEl.style.left = `${offset + 50}px`;
+  divEl.style.bottom = `${offset - 20}px`;
+  divChild.innerText = elementContent.title;
+  divP.innerText = elementContent.content;
+  let aTag = document.createElement("a");
+  aTag.innerText = "Link to project";
+  aTag.href = elementContent.url;
+  aTag.target = "_blank";
+  divP.appendChild(aTag);
 
   divButton.innerText = "Close";
 
   divEl.style.display = "block";
   divChild.appendChild(divButton);
   divEl.appendChild(divChild);
+  divEl.appendChild(divP);
 
   divButton.addEventListener("click", function (e) {
     let index = eleIndex;
@@ -143,13 +194,114 @@ function getModalWindowElement(eleIndex) {
     if (e.target.className == "window-button") {
       console.log("close window");
       divEl.style.display = "none";
-      //remove clicked window from openedtabs array
-      console.log("removing element");
       openedTabs = openedTabs.filter((number) => number != index);
       console.log(openedTabs);
     }
   });
   console.log(openedTabs);
-
   return divEl;
 }
+
+const bioDesc = `I am an experienced Software Developer based in New York, with a strong background in 
+various software development technologies and tools. I am now actively transitioning my focus to 
+specialize in web development and web applications. Leave a comment below :)`;
+
+const cliRow = `<div class="cli-row">
+<span>emejia@DESKTOP-HI:<span class="blue-span">~</span><span class="w-span">$</span> </span>
+<input type="text" name="cmd"></input>
+</div>`;
+
+function getTerminalPanel() {
+  let terminal = document.createElement("div");
+  terminal.className = "terminal";
+  terminal.style.display = "block";
+  let terminalHeader = document.createElement("div");
+  terminalHeader.className = "terminal-header";
+
+  let headerButton = document.createElement("button");
+  headerButton.className = "header-button";
+  headerButton.innerText = "X";
+  headerButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.target.className == "header-button") {
+      console.log("clicked on close buttton");
+      console.log(terminal.style.display);
+      if (terminal.style.display === "block") {
+        terminal.style.display = "none";
+      }
+    }
+  });
+
+  let terminalDesc = document.createElement("div");
+  terminalDesc.className = "terminal-desc";
+  let terminalP = document.createElement("p");
+  terminalP.textContent = bioDesc;
+  let terminalCLI = document.createElement("div");
+  terminalCLI.className = "terminal-cli";
+  terminalCLI.innerHTML += cliRow;
+
+  terminalHeader.appendChild(headerButton);
+  terminal.appendChild(terminalHeader);
+
+  terminalDesc.appendChild(terminalP);
+  terminal.appendChild(terminalDesc);
+  terminal.appendChild(terminalCLI);
+  document.body.appendChild(terminal);
+}
+
+getTerminalPanel();
+
+function createSnowflake() {
+  var snowflakes = document.querySelectorAll(".snowflake");
+
+  if (snowflakes.length > 150) {
+    return;
+  }
+  var snowflake = document.createElement("div");
+  snowflake.className = "snowflake";
+  snowflake.style.left = random(0, window.innerWidth) + "px";
+  snowflake.style.width = snowflake.style.height = random(5, 15) + "px";
+  document.body.appendChild(snowflake);
+}
+
+function removeOutOfWindowSnowflakes() {
+  var snowflakes = document.querySelectorAll(".snowflake");
+  console.log(snowflakes.length);
+  snowflakes.forEach(function (snowflake) {
+    var rect = snowflake.getBoundingClientRect();
+
+    if (rect.bottom > window.innerHeight && snowflakes?.length > 148) {
+      snowflake.remove();
+    }
+  });
+}
+
+function moveSnow() {
+  var snowflakes = document.querySelectorAll(".snowflake");
+  setTimeout(() => {
+    snowflakes.forEach(function (snowflake) {
+      if (snowflake.style.top < 1) {
+        snowflake.style.top = "0px";
+      }
+
+      let topPos = snowflake.style.top.split("p")[0];
+      topPos = parseInt(topPos) + 1;
+      snowflake.style.top = `${topPos}px`;
+    });
+    window.requestAnimationFrame(moveSnow);
+  }, 20);
+}
+
+setInterval(function () {
+  createSnowflake();
+  removeOutOfWindowSnowflakes();
+}, 200);
+
+function random(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+window.addEventListener("DOMContentLoaded", function () {
+  window.requestAnimationFrame(moveSnow());
+});
