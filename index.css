@@ -36,28 +36,55 @@ body {
 }
 
 .window-modal {
-  position: fixed;
-  /* top: 150px; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
   right: 0;
   bottom: 0;
   left: 0;
-  width: 700px;
-  height: 700px;
-  margin: 0 auto;
-  border-radius: 0.5rem;
-  background-color: rgb(231, 231, 231);
-  outline: 1px solid #3ead30;
+  width: 450px;
+  height: 450px;
+  background-color: black;
+  border: 1px solid rgb(107, 107, 107);
+  color: rgb(220, 218, 218);
+  border-radius: 0.2rem;
+  line-height: 1.2rem;
+  font-family: "Ubuntu Mono", monospace;
+  filter: drop-shadow(0 0 5px white);
+
+  p {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  a {
+    text-decoration: none;
+    color: rgb(220, 218, 218);
+    font-weight: 700;
+    font-size: 1.1rem;
+    filter: drop-shadow(10px 5px 2px #28bd37);
+  }
 }
 
 .window-titlebar {
-  position: relative;
-  width: 100%;
-  height: 30px;
-  background-color: #3ead30;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
+  position: relative;
+  width: 100%;
+  height: 1.8rem;
+  background-color: rgb(51, 49, 49);
+  cursor: pointer;
+  padding: 0.2rem;
+}
+
+.window-img {
+  width: 98%;
+  height: 250px;
+  object-fit: cover;
+  filter: drop-shadow(0 0 5px rgb(103, 226, 46));
 }
 
 .window-button {
@@ -67,8 +94,13 @@ body {
   outline: none;
   border-radius: 5px;
   font-size: 16px;
-  background-color: #4caf50;
-  color: white;
+  background-color: transparent;
+  padding: 8px;
+  color: rgb(220, 218, 218);
+}
+
+.window-button:hover {
+  background-color: rgba(103, 226, 46, 0.5);
   transition: background-color 0.3s;
 }
 
@@ -91,10 +123,10 @@ body {
 }
 
 .terminal {
+  z-index: 1000;
   position: absolute;
   top: 20px;
   right: 20px;
-  bottom: 0;
   font-family: "Ubuntu Mono", monospace;
   font-size: 14px;
   color: rgb(220, 218, 218);
@@ -106,7 +138,6 @@ body {
   background-color: black;
   border-radius: 0.2rem;
   line-height: 1.3rem;
-  margin: 0 auto;
 }
 
 .terminal-desc {
@@ -122,6 +153,7 @@ body {
   width: auto;
   background-color: rgb(51, 49, 49);
   padding: 0.2rem;
+  cursor: pointer;
 }
 
 .header-button {

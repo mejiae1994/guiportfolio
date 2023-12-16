@@ -8,8 +8,8 @@
 // banner for random stuff
 // maybe some animation cartoon pixel walking
 // make it cozy
-// display shortcut for opening terminal to leave a message, hint shortcut
 // on terminal hover, focus input
+// parallax top to bottom animation repeating in cycle
 
 /* 
   background snow falling, snow that falls piles on the bottom while user is in website
@@ -66,6 +66,7 @@ const filesArray = [
       "Mapeeter is an interactive map application that allows users to mark and share images/comments of places they have traveled to. Mapeeter is a solo project that uses React with Material-UI, TypeScript, Node.js with Express, and Postgresql (Supabase). The aim is to create a push pin travel map with social aspects/features.",
     url: "https://github.com/mejiae1994/mapeeter",
     src: "images/folder.png",
+    imgsrc: "images/mapeeter.PNG",
   },
   {
     fileType: iconType.Project,
@@ -74,6 +75,7 @@ const filesArray = [
       "Timer Log is a personnal chrome extension that I use to monitor/log the amount of time I spent on various self-improvement actitivies such as learning, working on projects, etc. It integrates with the Notion API to update a databse.",
     url: "https://github.com/mejiae1994/timer-log-extension",
     src: "images/folder.png",
+    imgsrc: "images/log-extension.PNG",
   },
   {
     fileType: iconType.Project,
@@ -82,6 +84,7 @@ const filesArray = [
       "Eel is a multi-level video game in which the player assumes the role of an eel. The objective is to protect its offspring while evading deadly predators. The game is developed using plain JavaScript, HTML, and CSS, with canvas and physics algorithms utilized for rendering, animation, and movement.",
     url: "https://github.com/mejiae1994/Eel",
     src: "images/folder.png",
+    imgsrc: "images/eel-project.png",
   },
 ];
 
@@ -166,6 +169,10 @@ function getModalWindowElement(eleIndex) {
   let divButton = document.createElement("button");
   let divP = document.createElement("p");
 
+  let imgtag = document.createElement("img");
+  imgtag.className = "window-img";
+  imgtag.src = elementContent?.imgsrc;
+
   divEl.className = "window-modal";
   divChild.className = "window-titlebar";
   divButton.className = "window-button";
@@ -182,10 +189,11 @@ function getModalWindowElement(eleIndex) {
   divP.appendChild(aTag);
 
   divButton.innerText = "Close";
-
-  divEl.style.display = "block";
+  makeDraggable(divChild);
+  divEl.style.display = "flex";
   divChild.appendChild(divButton);
   divEl.appendChild(divChild);
+  divEl.appendChild(imgtag);
   divEl.appendChild(divP);
 
   divButton.addEventListener("click", function (e) {
@@ -207,7 +215,7 @@ specialize in web development and web applications. Leave a comment below :)`;
 
 const cliRow = `<div class="cli-row">
 <span>emejia@DESKTOP-HI:<span class="blue-span">~</span><span class="w-span">$</span> </span>
-<input class="cli-input" type="text" name="cmd"></input>
+<input class="cli-input" type="text" name="cmd" autofocus></input>
 </div>`;
 
 function getTerminalPanel() {
@@ -216,6 +224,8 @@ function getTerminalPanel() {
   terminal.style.display = "block";
   let terminalHeader = document.createElement("div");
   terminalHeader.className = "terminal-header";
+
+  makeDraggable(terminalHeader);
 
   let headerButton = document.createElement("button");
   headerButton.className = "header-button";
@@ -325,3 +335,49 @@ function random(min, max) {
 }
 
 window.requestAnimationFrame(moveSnow);
+
+//draggable windows, parent of passed element needs to be the main div
+function makeDraggable(draggableElement) {
+  let dragOffsetX = 0;
+  let dragOffsetY = 0;
+
+  draggableElement.onmousedown = function (event) {
+    // Calculate the offset at the start of the drag
+    console.log(event.target.parentElement);
+    dragOffsetX = event.clientX - draggableElement.parentElement.offsetLeft;
+    dragOffsetY = event.clientY - draggableElement.parentElement.offsetTop;
+
+    // Add the mousemove event listener
+    document.addEventListener("mousemove", onMouseMove);
+  };
+
+  function onMouseMove(event) {
+    // Calculate new position
+    let newLeft = event.clientX - dragOffsetX;
+    let newTop = event.clientY - dragOffsetY;
+
+    // Get the bounding rectangle of the window
+    let windowRect = document.body.getBoundingClientRect();
+
+    // Check if the new position is within the window bounds
+    if (newLeft < 0) newLeft = 0;
+    if (newTop < 0) newTop = 0;
+    if (newLeft > windowRect.width - draggableElement.offsetWidth)
+      newLeft = windowRect.width - draggableElement.offsetWidth;
+    if (newTop > windowRect.height - draggableElement.offsetHeight)
+      newTop = windowRect.height - draggableElement.offsetHeight;
+
+    // Adjust the position of the draggable element
+    draggableElement.parentElement.style.left = newLeft + "px";
+    draggableElement.parentElement.style.top = newTop + "px";
+  }
+
+  draggableElement.onmouseup = function () {
+    // Remove the mousemove event listener
+    document.removeEventListener("mousemove", onMouseMove);
+  };
+
+  draggableElement.ondragstart = function () {
+    return false;
+  };
+}
