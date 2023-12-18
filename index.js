@@ -2,25 +2,21 @@
 
 // based on weather data
 // terminal right side of the screen to accept input
-// drag and drop
 // implement other filetypes
 // draggable positioning widgets
-// banner for random stuff
 // maybe some animation cartoon pixel walking
 // make it cozy
-// on terminal hover, focus input
 // parallax top to bottom animation repeating in cycle
 
 /* 
   background snow falling, snow that falls piles on the bottom while user is in website
   I will probably need different size flakes, maybe 6 different flakes
   falling at different speed
-
 */
 
-let windowGrid = document.querySelector(".window-grid");
+const windowGrid = document.querySelector(".window-grid");
 
-let layout = [
+const layout = [
   [1, 1, 0],
   [1, 1, 0],
   [1, 1, 0],
@@ -143,8 +139,8 @@ function getFileTemplate(file) {
   }
 }
 
+//Events
 function openWindow(e) {
-  e.preventDefault();
   e.stopPropagation();
 
   let currentEl = e.target;
@@ -198,14 +194,12 @@ function getModalWindowElement(eleIndex) {
 
   divButton.addEventListener("click", function (e) {
     let index = eleIndex;
-    e.preventDefault();
     e.stopPropagation();
     if (e.target.className == "window-button") {
       divEl.style.display = "none";
       openedTabs = openedTabs.filter((number) => number != index);
     }
   });
-  console.log(openedTabs);
   return divEl;
 }
 
@@ -217,6 +211,8 @@ const cliRow = `<div class="cli-row">
 <span>emejia@DESKTOP-HI:<span class="blue-span">~</span><span class="w-span">$</span> </span>
 <input class="cli-input" type="text" name="cmd" autofocus></input>
 </div>`;
+
+getTerminalPanel();
 
 function getTerminalPanel() {
   let terminal = document.createElement("div");
@@ -230,8 +226,8 @@ function getTerminalPanel() {
   let headerButton = document.createElement("button");
   headerButton.className = "header-button";
   headerButton.innerText = "X";
+
   headerButton.addEventListener("click", function (e) {
-    e.preventDefault();
     e.stopPropagation();
     if (e.target.className == "header-button") {
       if (terminal.style.display === "block") {
@@ -255,15 +251,13 @@ function getTerminalPanel() {
   terminal.appendChild(terminalDesc);
   terminal.appendChild(terminalCLI);
 
-  terminal.addEventListener("mousemove", function () {
+  terminal.addEventListener("mouseover", function () {
     let cliInput = document.querySelector(".cli-input");
-    console.log("mouse moving");
+    cliInput.focus();
   });
 
   document.body.appendChild(terminal);
 }
-
-getTerminalPanel();
 
 //need to add flashing | character to cli row to indicate awaiting input
 let cliInput = document.querySelector(".cli-input");
@@ -282,7 +276,6 @@ cliInput.addEventListener("keydown", function (e) {
   }
 });
 
-function appendCliRow() {}
 function createSnowflake() {
   var snowflakes = document.querySelectorAll(".snowflake");
 
@@ -303,7 +296,6 @@ function removeOutOfWindowSnowflakes() {
 
     if (rect.bottom > window.innerHeight && snowflakes?.length > 148) {
       snowflake.remove();
-      console.log("removed snowflake");
     }
   });
 }
@@ -343,7 +335,6 @@ function makeDraggable(draggableElement) {
 
   draggableElement.onmousedown = function (event) {
     // Calculate the offset at the start of the drag
-    console.log(event.target.parentElement);
     dragOffsetX = event.clientX - draggableElement.parentElement.offsetLeft;
     dragOffsetY = event.clientY - draggableElement.parentElement.offsetTop;
 
@@ -373,11 +364,6 @@ function makeDraggable(draggableElement) {
   }
 
   draggableElement.onmouseup = function () {
-    // Remove the mousemove event listener
     document.removeEventListener("mousemove", onMouseMove);
-  };
-
-  draggableElement.ondragstart = function () {
-    return false;
   };
 }

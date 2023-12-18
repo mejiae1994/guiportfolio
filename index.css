@@ -127,6 +127,7 @@ body {
   position: absolute;
   top: 20px;
   right: 20px;
+  bottom: 20px;
   font-family: "Ubuntu Mono", monospace;
   font-size: 14px;
   color: rgb(220, 218, 218);
