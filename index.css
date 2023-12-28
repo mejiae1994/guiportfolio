@@ -32,9 +32,6 @@ body {
   align-items: center;
 }
 
-.window-icon-content {
-}
-
 .window-modal {
   display: flex;
   flex-direction: column;

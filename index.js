@@ -7,6 +7,7 @@
 // maybe some animation cartoon pixel walking
 // make it cozy
 // parallax top to bottom animation repeating in cycle
+// add a legend for the icon types
 
 /* 
   background snow falling, snow that falls piles on the bottom while user is in website
@@ -61,7 +62,7 @@ const filesArray = [
     content:
       "Mapeeter is an interactive map application that allows users to mark and share images/comments of places they have traveled to. Mapeeter is a solo project that uses React with Material-UI, TypeScript, Node.js with Express, and Postgresql (Supabase). The aim is to create a push pin travel map with social aspects/features.",
     url: "https://github.com/mejiae1994/mapeeter",
-    src: "images/folder.png",
+    src: "images/project.png",
     imgsrc: "images/mapeeter.PNG",
   },
   {
@@ -70,7 +71,7 @@ const filesArray = [
     content:
       "Timer Log is a personnal chrome extension that I use to monitor/log the amount of time I spent on various self-improvement actitivies such as learning, working on projects, etc. It integrates with the Notion API to update a databse.",
     url: "https://github.com/mejiae1994/timer-log-extension",
-    src: "images/folder.png",
+    src: "images/project.png",
     imgsrc: "images/log-extension.PNG",
   },
   {
@@ -79,8 +80,26 @@ const filesArray = [
     content:
       "Eel is a multi-level video game in which the player assumes the role of an eel. The objective is to protect its offspring while evading deadly predators. The game is developed using plain JavaScript, HTML, and CSS, with canvas and physics algorithms utilized for rendering, animation, and movement.",
     url: "https://github.com/mejiae1994/Eel",
-    src: "images/folder.png",
+    src: "images/project.png",
     imgsrc: "images/eel-project.png",
+  },
+  {
+    fileType: iconType.Project,
+    title: "View Cheat",
+    content:
+      "This is a simple WPF app that integrates global hotkeys and windows notification area for conveniently viewing my personal cheatsheets on the fly.",
+    url: "https://github.com/mejiae1994/viewcheat",
+    src: "images/project.png",
+    imgsrc: "images/viewcheat.PNG",
+  },
+  {
+    fileType: iconType.Project,
+    title: "Chip 8 Emulator",
+    content:
+      "This is a minimal Chip-8 emulator implemented in C++. It represents my first attempt at emulation, providing a valuable learning experience in low-level operations and bitwise manipulation for logical decisions.",
+    url: "https://github.com/mejiae1994/viewcheat",
+    src: "images/project.png",
+    imgsrc: "images/chipo.PNG",
   },
 ];
 
@@ -326,7 +345,7 @@ function random(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-window.requestAnimationFrame(moveSnow);
+requestAnimationFrame(moveSnow);
 
 //draggable windows, parent of passed element needs to be the main div
 function makeDraggable(draggableElement) {
